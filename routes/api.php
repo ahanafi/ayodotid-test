@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\ScoreController;
@@ -18,11 +19,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Auth Routes
+Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('teams', TeamController::class)->except(['edit', 'create']);
+    Route::resource('players', PlayerController::class)->except(['edit', 'create']);
+    Route::resource('games', GameController::class)->except(['edit', 'create']);
+    Route::post('/games/{game}/update-score', [ScoreController::class, 'update'])->name('score.update');
+
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/user', function (Request $request){
+        return $request->user();
+    });
 });
 
-Route::resource('teams', TeamController::class)->except(['edit', 'create']);
-Route::resource('players', PlayerController::class)->except(['edit', 'create']);
-Route::resource('games', GameController::class)->except(['edit', 'create']);
-Route::post('/games/{game}/update-score', [ScoreController::class, 'update'])->name('score.update');

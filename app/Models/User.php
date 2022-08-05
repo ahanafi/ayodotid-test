@@ -12,6 +12,14 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected static function boot()
+    {
+        parent::boot();
+        User::saving(function($user) {
+            $user->password = bcrypt($user->password);
+        });
+    }
+
     /**
      * The attributes that are mass assignable.
      *
