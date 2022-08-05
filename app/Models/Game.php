@@ -33,8 +33,13 @@ class Game extends Model
         return $this->hasOne(Team::class, 'id',  'away');
     }
 
-    public function score(): HasMany
+    public function goals(): HasMany
     {
-        return $this->hasMany(DetailGame::class, 'game_id');
+        return $this->hasMany(Goal::class, 'game_id');
+    }
+
+    public function getSchedule(): string
+    {
+        return $this->attributes['date'] . " " . $this->attributes['time'];
     }
 }

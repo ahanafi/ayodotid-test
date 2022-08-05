@@ -16,11 +16,11 @@ class ScoreController extends Controller
     public function update(UpdateScoreRequest $request, Game $game)
     {
         try {
-            $game->score()->create([
+            $game->goals()->create([
                 'player_id' => $request->get('player_id'),
-                'goal_at' => $request->get('goal_at')
+                'time' => $request->get('time')
             ]);
-            $game->load(['score']);
+            $game->load(['goals']);
             return $this->handleResponse($game, "The game's score was successfully updated.");
         } catch (\Exception $e) {
             return $this->handleError($e->getMessage());

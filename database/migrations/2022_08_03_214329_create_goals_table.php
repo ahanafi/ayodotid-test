@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('detail_games', function (Blueprint $table) {
+        Schema::create('goals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('game_id')->constrained();
             $table->foreignId('player_id')->constrained();
-            $table->time('goal_at')->comment('Minute goal');
+            $table->time('time')->comment('Minute goal');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detail_games');
+        Schema::dropIfExists('goals');
     }
 };
