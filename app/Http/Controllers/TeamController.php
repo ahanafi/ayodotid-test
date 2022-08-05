@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTeamRequest;
 use App\Models\Team;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class TeamController extends Controller
 {
@@ -17,7 +15,7 @@ class TeamController extends Controller
      */
     public function index()
     {
-        $teams = Team::paginate(100);
+        $teams = Team::paginate(10);
         return \response()->json([
             'success' => true,
             'data' => $teams
