@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\PlayerController;
+use App\Http\Controllers\ScoreController;
 use App\Http\Controllers\TeamController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,3 +24,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::resource('teams', TeamController::class)->except(['edit', 'create']);
 Route::resource('players', PlayerController::class)->except(['edit', 'create']);
+Route::resource('games', GameController::class)->except(['edit', 'create']);
+Route::post('/games/{game}/update-score', [ScoreController::class, 'update'])->name('score.update');

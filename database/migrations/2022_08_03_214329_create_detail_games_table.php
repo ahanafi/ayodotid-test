@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('game_id')->constrained();
             $table->foreignId('player_id')->constrained();
-            $table->integer('goal_at')->unsigned();
+            $table->time('goal_at')->comment('Minute goal');
             $table->softDeletes();
             $table->timestamps();
         });

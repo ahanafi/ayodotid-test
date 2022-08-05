@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DetailGame extends Model
@@ -15,4 +16,14 @@ class DetailGame extends Model
         'player_id',
         'goal_at'
     ];
+
+    public function game(): BelongsTo
+    {
+        return $this->belongsTo(Game::class);
+    }
+
+    public function player(): BelongsTo
+    {
+        return $this->belongsTo(Player::class);
+    }
 }

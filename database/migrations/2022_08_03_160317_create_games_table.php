@@ -15,14 +15,16 @@ return new class extends Migration
     {
         Schema::create('games', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('home');
-            $table->unsignedBigInteger('away');
+            $table->foreignId('home')->references('id')->on('teams');
+            $table->foreignId('away')->references('id')->on('teams');
             $table->date('date');
-            $table->time('start_at');
-            $table->time('end_at');
-            $table->enum('winner', [
-                'HOME', 'AWAY', 'DRAW'
-            ])->default('DRAW');
+            $table->time('time');
+            $table->enum('status', [
+                'FINISHED', 'SCHEDULED', 'PENDING', 'CANCELLED'
+            ])->default('SCHEDULED');
+            $table->integer('home_score')->default(0);
+            $table->integer('away_score')->default(0);
+            $table->enum('winner', ['HOME', 'AWAY', 'DRAW'])->default('DRAW');
             $table->softDeletes();
             $table->timestamps();
         });
