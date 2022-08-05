@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePlayerRequest;
+use App\Http\Resources\PlayerResource;
 use App\Models\Player;
 use Illuminate\Http\JsonResponse;
 
@@ -15,11 +16,8 @@ class PlayerController extends Controller
      */
     public function index()
     {
-        $players = Player::paginate(10);
-        return \response()->json([
-            'success' => true,
-            'data' => $players
-        ]);
+        $players = Player::all();
+        return $this->handleResponse(PlayerResource::collection($players));
     }
 
     /**
@@ -31,16 +29,10 @@ class PlayerController extends Controller
     public function store(StorePlayerRequest $request)
     {
         try {
-            Player::create($request->all());
-            return \response()->json([
-                'success' => true,
-                'message' => 'New player successfully created.'
-            ], 201);
+            $player = Player::create($request->all());
+            return $this->handleResponse(new PlayerResource($player) , 'New player successfully created.');
         } catch (\Exception $e) {
-            return \response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 500);
+            return $this->handleError($e->getMessage());
         }
     }
 
@@ -52,10 +44,7 @@ class PlayerController extends Controller
      */
     public function show(Player $player)
     {
-        return \response()->json([
-            'success' => true,
-            'data' => $player
-        ]);
+        return $this->handleResponse(new PlayerResource($player));
     }
 
     /**
@@ -69,15 +58,9 @@ class PlayerController extends Controller
     {
         try {
             $player->update($request->all());
-            return \response()->json([
-                'success' => true,
-                'message' => 'Player was successfully updated.'
-            ]);
+            return $this->handleResponse(new PlayerResource($player), 'Player was successfully updated.');
         } catch (\Exception $e) {
-            return \response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 500);
+            return $this->handleError($e->getMessage());
         }
     }
 
@@ -91,15 +74,9 @@ class PlayerController extends Controller
     {
         try {
             $player->delete();
-            return \response()->json([
-                'success' => true,
-                'message' => 'Player was successfully deleted.'
-            ]);
+            return $this->handleResponse([], 'Player was successfully deleted.');
         } catch (\Exception $e) {
-            return \response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 500);
+            return $this->handleError($e->getMessage());
         }
     }
 }

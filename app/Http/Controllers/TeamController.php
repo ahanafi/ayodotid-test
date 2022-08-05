@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTeamRequest;
+use App\Http\Resources\TeamResource;
 use App\Models\Team;
 use Illuminate\Http\JsonResponse;
 
@@ -15,11 +16,8 @@ class TeamController extends Controller
      */
     public function index()
     {
-        $teams = Team::paginate(10);
-        return \response()->json([
-            'success' => true,
-            'data' => $teams
-        ]);
+        $teams = Team::all();
+        return $this->handleResponse(TeamResource::collection($teams));
     }
 
     /**
@@ -31,16 +29,10 @@ class TeamController extends Controller
     public function store(StoreTeamRequest $request)
     {
         try {
-            Team::create($request->all());
-            return \response()->json([
-                'success' => true,
-                'message' => 'New team successfully created.'
-            ], 201);
+            $team = Team::create($request->all());
+            return $this->handleResponse(new TeamResource($team), 'New team successfully created.');
         } catch (\Exception $e) {
-            return \response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 500);
+            return $this->handleError($e->getMessage());
         }
     }
 
@@ -52,10 +44,7 @@ class TeamController extends Controller
      */
     public function show(Team $team)
     {
-        return \response()->json([
-            'success' => true,
-            'data' => $team
-        ]);
+        return $this->handleResponse(new TeamResource($team));
     }
 
     /**
@@ -69,15 +58,9 @@ class TeamController extends Controller
     {
         try {
             $team->update($request->all());
-            return \response()->json([
-                'success' => true,
-                'message' => 'Team was successfully updated.'
-            ]);
+            return $this->handleResponse(new TeamResource($team), 'Team was successfully updated.');
         } catch (\Exception $e) {
-            return \response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 500);
+            return $this->handleError($e->getMessage());
         }
     }
 
@@ -91,15 +74,9 @@ class TeamController extends Controller
     {
         try {
             $team->delete();
-            return \response()->json([
-                'success' => true,
-                'message' => 'Team was successfully deleted.'
-            ]);
+            return $this->handleResponse([], 'Team was successfully deleted.');
         } catch (\Exception $e) {
-            return \response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 500);
+            return $this->handleError($e->getMessage());
         }
     }
 }
