@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\PlayerController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ScoreController;
 use App\Http\Controllers\TeamController;
 use Illuminate\Http\Request;
@@ -28,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('players', PlayerController::class)->except(['edit', 'create']);
     Route::resource('games', GameController::class)->except(['edit', 'create']);
     Route::post('/games/{game}/update-score', [ScoreController::class, 'update'])->name('score.update');
+    Route::get('/games/{game}/report', [ReportController::class, 'index'])->name('games.report');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/user', function (Request $request){

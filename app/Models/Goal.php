@@ -14,7 +14,7 @@ class Goal extends Model
     protected $fillable = [
         'game_id',
         'player_id',
-        'goal_at'
+        'time'
     ];
 
     public function game(): BelongsTo

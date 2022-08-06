@@ -11,6 +11,8 @@ class Team extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $primaryKey = 'id';
+
     protected $fillable = [
         'name',
         'logo',

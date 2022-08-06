@@ -25,7 +25,7 @@ class UpdateScoreRequest extends FormRequest
     {
         return [
             'player_id' => 'required|exists:players,id',
-            'goal_at' => 'required'
+            'time' => 'required'
         ];
     }
 }
