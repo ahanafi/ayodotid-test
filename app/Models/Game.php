@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Constants\Winner;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Expression;
 
 class Game extends Model
 {
@@ -69,5 +69,25 @@ class Game extends Model
             ->orderBy('totalGoal', 'desc')
             ->limit(1)
             ->first();
+    }
+
+    public function updateTheWinner()
+    {
+        $homeScore = $this->attributes['home_score'];
+        $awayScore = $this->attributes['away_score'];
+
+        if ($homeScore > $awayScore) {
+            $this->update([
+                'winner' => Winner::HOME
+            ]);
+        } else if ($homeScore < $awayScore) {
+            $this->update([
+                'winner' => Winner::AWAY
+            ]);
+        } else {
+            $this->update([
+                'winner' => Winner::DRAW
+            ]);
+        }
     }
 }

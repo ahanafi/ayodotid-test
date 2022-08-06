@@ -17,6 +17,22 @@ class Goal extends Model
         'time'
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+        Goal::saved(function ($goal) {
+            $playerTeamId = $goal->player->team_id;
+            $columns = $playerTeamId === $goal->game->home ? 'home_score' : ($playerTeamId === $goal->game->away ? 'away_score' : null);
+            if ($columns !== null) {
+                $goal->game()->update([
+                    $columns => ($goal->game->{$columns} + 1)
+                ]);
+            }
+
+            $goal->game->updateTheWinner();
+        });
+    }
+
     public function game(): BelongsTo
     {
         return $this->belongsTo(Game::class);
